@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Atlantis — Sistema de Gestão</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div>
+        <div class="logo-title">ATLANTIS</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="dashboard">
+        Dashboard
+      </a>
+      <a href="#" class="nav-item" data-page="clientes">
+        Clientes
+      </a>
+      <a href="#" class="nav-item" data-page="hospedagens">
+        Hospedagens
+      </a>
+      <a href="#" class="nav-item" data-page="quartos">
+        Quartos
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1 class="page-title" id="pageTitle">Dashboard</h1>
+      <div class="topbar-right">
+        <span id="currentDate"></span>
+      </div>
+    </header>
+
+    <div id="pageContent" class="content"></div>
+  </main>
+
+  <div id="modal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Modal</h2>
+        <button onclick="closeModal()" class="modal-close">✕</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/pages/dashboard.js"></script>
+  <script src="/js/pages/clientes.js"></script>
+  <script src="/js/pages/hospedagens.js"></script>
+  <script src="/js/pages/quartos.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
