@@ -163,8 +163,9 @@ async function verCliente(id) {
       </div>
       <div class="add-inline" style="margin-top:12px">
         <select id="novoDocTipo">
-          <option>CPF</option><option>RG</option><option>CNH</option>
-          <option>Passaporte</option><option>Outro</option>
+          <option>CPF</option>
+          <option>RG</option>
+          <option>Passaporte</option>
         </select>
         <input type="text" id="novoDocNum" placeholder="Número" />
         <button class="btn btn-primary btn-sm" onclick="adicionarDoc(${c.id})">+ Adicionar</button>

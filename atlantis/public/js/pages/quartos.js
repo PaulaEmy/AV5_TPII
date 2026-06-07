@@ -1,105 +1,239 @@
 async function renderQuartos() {
   return `
-    <div id="quartosConteudo" class="loading">Carregando...</div>
+    <div
+      id="quartosConteudo"
+      class="loading">
+      Carregando...
+    </div>
   `;
 }
 
 async function loadQuartos() {
-  const [resQuartos, resAcom] = await Promise.all([
+
+  const [
+    resQuartos,
+    resAcomodacoes
+  ] = await Promise.all([
     API.get('/hospedagens/quartos'),
-    API.get('/hospedagens/acomodacoes'),
+    API.get('/hospedagens/acomodacoes')
   ]);
 
-  const quartos     = resQuartos.dados  || [];
-  const acomodacoes = resAcom.dados     || [];
-  const el = document.getElementById('quartosConteudo');
-  if (!el) return;
+  const quartos =
+    resQuartos.dados || [];
 
-  const disponiveis = quartos.filter(q => q.disponivel).length;
-  const ocupados    = quartos.filter(q => !q.disponivel).length;
+  const acomodacoes =
+    resAcomodacoes.dados || [];
 
-  el.innerHTML = `
-    <div style="display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap">
-      <div class="stat-card" style="flex:1;min-width:140px">
-        <div class="stat-label">Total de Quartos</div>
-        <div class="stat-value">${quartos.length}</div>
-      </div>
-      <div class="stat-card" style="flex:1;min-width:140px;border-top-color:#2D6A4F">
-        <div class="stat-label">Disponíveis</div>
-        <div class="stat-value">${disponiveis}</div>
-      </div>
-      <div class="stat-card" style="flex:1;min-width:140px;border-top-color:#C0392B">
-        <div class="stat-label">Ocupados</div>
-        <div class="stat-value">${ocupados}</div>
-      </div>
-    </div>
+  const container =
+    document.getElementById('quartosConteudo');
 
-    <!-- Tabela de acomodações (Tabela 1) -->
-    <div class="table-section" style="margin-bottom:28px">
+  if (!container) return;
+
+  container.innerHTML = `
+
+    ${renderTabelaAcomodacoes(
+      acomodacoes
+    )}
+
+    ${renderTabelaQuartos(
+      quartos
+    )}
+  `;
+}
+
+function renderResumoQuartos(quartos) {
+
+  const disponiveis =
+    quartos.filter(
+      quarto => quarto.disponivel
+    ).length;
+
+  const ocupados =
+    quartos.filter(
+      quarto => !quarto.disponivel
+    ).length;
+}
+
+function renderTabelaAcomodacoes(
+  acomodacoes
+) {
+  return `
+    <div
+      class="table-section quartos-section">
+
       <div class="table-header">
-        <h2>Tipos de Acomodação</h2>
+        <h2>
+          Tipos de Acomodação
+        </h2>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>Nome</th>
-            <th>Cama Solteiro</th>
-            <th>Cama Casal</th>
-            <th>Suíte</th>
-            <th>Climatização</th>
-            <th>Garagem</th>
-            <th>Diária</th>
-          </tr></thead>
-          <tbody>
-            ${acomodacoes.map(a => `
-              <tr>
-                <td><strong>${a.nome}</strong></td>
-                <td>${a.camas_solteiro}</td>
-                <td>${a.camas_casal}</td>
-                <td>${a.suites}</td>
-                <td>${a.climatizacao ? '<span class="badge badge-green">Sim</span>' : '<span class="badge badge-gray">Não</span>'}</td>
-                <td>${a.garagem}</td>
-                <td style="color:var(--gold-dark);font-weight:500">${formatMoney(a.preco_diaria)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- Grid de quartos -->
-    <div class="table-section">
-      <div class="table-header"><h2>Quartos</h2></div>
       <div class="table-wrap">
+
         <table>
-          <thead><tr>
-            <th>Nº Quarto</th>
-            <th>Acomodação</th>
-            <th>Camas Solteiro</th>
-            <th>Camas Casal</th>
-            <th>Suítes</th>
-            <th>Garagem</th>
-            <th>Diária</th>
-            <th>Status</th>
-          </tr></thead>
+
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cama Solteiro</th>
+              <th>Cama Casal</th>
+              <th>Suíte</th>
+              <th>Climatização</th>
+              <th>Garagem</th>
+              <th>Diária</th>
+            </tr>
+          </thead>
+
           <tbody>
-            ${quartos.map(q => `
-              <tr>
-                <td><strong>${q.numero}</strong></td>
-                <td>${q.nome_acomodacao}</td>
-                <td>${q.camas_solteiro}</td>
-                <td>${q.camas_casal}</td>
-                <td>${q.suites}</td>
-                <td>${q.garagem}</td>
-                <td style="color:var(--gold-dark);font-weight:500">${formatMoney(q.preco_diaria)}</td>
-                <td>${q.disponivel
-                  ? '<span class="badge badge-green">Disponível</span>'
-                  : '<span class="badge badge-red">Ocupado</span>'}</td>
-              </tr>
-            `).join('')}
+
+            ${acomodacoes
+              .map(renderAcomodacaoRow)
+              .join('')}
+
           </tbody>
+
         </table>
+
       </div>
+
     </div>
+  `;
+}
+
+function renderAcomodacaoRow(
+  acomodacao
+) {
+  return `
+    <tr>
+
+      <td>
+        <strong>
+          ${acomodacao.nome}
+        </strong>
+      </td>
+
+      <td>
+        ${acomodacao.camas_solteiro}
+      </td>
+
+      <td>
+        ${acomodacao.camas_casal}
+      </td>
+
+      <td>
+        ${acomodacao.suites}
+      </td>
+
+      <td>
+        ${
+          acomodacao.climatizacao
+            ? '<span class="badge badge-green">Sim</span>'
+            : '<span class="badge badge-gray">Não</span>'
+        }
+      </td>
+
+      <td>
+        ${acomodacao.garagem}
+      </td>
+
+      <td class="valor-diaria">
+        ${formatMoney(
+          acomodacao.preco_diaria
+        )}
+      </td>
+
+    </tr>
+  `;
+}
+
+function renderTabelaQuartos(
+  quartos
+) {
+  return `
+    <div class="table-section">
+
+      <div class="table-header">
+        <h2>Quartos</h2>
+      </div>
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Nº Quarto</th>
+              <th>Acomodação</th>
+              <th>Camas Solteiro</th>
+              <th>Camas Casal</th>
+              <th>Suítes</th>
+              <th>Garagem</th>
+              <th>Diária</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${quartos
+              .map(renderQuartoRow)
+              .join('')}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+  `;
+}
+
+function renderQuartoRow(
+  quarto
+) {
+  return `
+    <tr>
+
+      <td>
+        <strong>
+          ${quarto.numero}
+        </strong>
+      </td>
+
+      <td>
+        ${quarto.nome_acomodacao}
+      </td>
+
+      <td>
+        ${quarto.camas_solteiro}
+      </td>
+
+      <td>
+        ${quarto.camas_casal}
+      </td>
+
+      <td>
+        ${quarto.suites}
+      </td>
+
+      <td>
+        ${quarto.garagem}
+      </td>
+
+      <td class="valor-diaria">
+        ${formatMoney(
+          quarto.preco_diaria
+        )}
+      </td>
+
+      <td>
+        ${
+          quarto.disponivel
+            ? '<span class="badge badge-green">Disponível</span>'
+            : '<span class="badge badge-red">Ocupado</span>'
+        }
+      </td>
+
+    </tr>
   `;
 }
