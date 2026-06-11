@@ -37,3 +37,5 @@ main().catch(err => {
   console.error('Falha ao iniciar o servidor:', err);
   process.exit(1);
 });
+
+// ૮₍ ´˶• ᴥ •˶` ₎ა shoyu~
