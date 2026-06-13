@@ -135,3 +135,30 @@ ON DUPLICATE KEY UPDATE numero = numero;
 
 ```
 
+## Instalando as Dependências
+
+Entre na pasta do projeto:
+
+```bash
+cd atlantis
+```
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+## Executando o Projeto
+
+Inicie o servidor de desenvolvimento:
+
+```bash
+npm run dev
+```
+
+A aplicação estará disponível em:
+
+```text
+http://localhost:3000
+```
